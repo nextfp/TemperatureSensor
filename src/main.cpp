@@ -13,8 +13,8 @@ void loop()
 {
   // put your main code here, to run repeatedly:
   // double vol = analogReadMilliVolts(AD_PIN) * 1000;
-  double adcVal = analogRead(AD_PIN) * 3300 / 4096;
-  double vol = (adcVal * 5000 / 3300 + 200) / 1000;
+  double adcVal = analogRead(AD_PIN) * 3300 / 4096; // 3.3Vを4096段階で出力する.
+  double vol = (adcVal * 5000 / 3300 + 200) / 1000; // 12Vを3.5Vに降圧しているので、もとに戻す。
   Serial.println(adcVal);
   // double vol = 4.1;
   Serial.printf("ADC Val: %f\n", vol);
