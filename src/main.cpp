@@ -108,13 +108,15 @@ public:
 // 準備したクラスのインスタンスを作成します。
 LGFX lcd;
 
-#define AD_PIN 32
+#define Thermo_PIN 32
+#define Gear_PIn 33
 
 void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  pinMode(AD_PIN, ANALOG);
+  pinMode(Thermo_PIN, ANALOG);
+  pinMode(Gear_PIn, ANALOG);
   lcd.init();
   lcd.setRotation(3);
   lcd.clear(TFT_WHITE);
@@ -125,8 +127,8 @@ void setup()
 double Thermo()
 {
   // double vol = analogReadMilliVolts(AD_PIN) * 1000;
-  double adcVal = analogRead(AD_PIN) * 3300 / 4096; // 3.3Vを4096段階で出力する.
-  double vol = (adcVal * 5000 / 3300 + 200) / 1000; // 12Vを3.5Vに降圧しているので、もとに戻す。
+  double adcVal = analogRead(Thermo_PIN) * 3300 / 4096; // 3.3Vを4096段階で出力する.
+  double vol = (adcVal * 5000 / 3300 + 200) / 1000;     // 12Vを3.5Vに降圧しているので、もとに戻す。
   Serial.println(adcVal);
   // double vol = 4.1;
   Serial.printf("ADC Val: %f\n", vol);
@@ -145,7 +147,7 @@ double Thermo()
 
 double GearPosition()
 {
-  double g_adcVal = analogRead(AD_PIN) * 3300 / 4096;   // 3.3Vを4096段階で出力する.
+  double g_adcVal = analogRead(Gear_PIn) * 3300 / 4096; // 3.3Vを4096段階で出力する.
   double g_vol = (g_adcVal * 5000 / 3300 + 200) / 1000; // 12Vを3.5Vに降圧しているので、もとに戻す。
                                                         // ギアの判定
   if (g_vol >= 1.6 && g_vol <= 2.0)
