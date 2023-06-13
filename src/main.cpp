@@ -128,7 +128,7 @@ double Thermo()
 {
   // double vol = analogReadMilliVolts(AD_PIN) * 1000;
   double adcVal = analogRead(Thermo_PIN) * 3300 / 4096; // 3.3Vを4096段階で出力する.
-  double vol = (adcVal * 5000 / 3300 + 200) / 1000;     // 12Vを3.5Vに降圧しているので、もとに戻す。
+  double vol = (adcVal * 5000 / 3900) / 1000;           // 12Vを3.5Vに降圧しているので、もとに戻す。
   Serial.println(adcVal);
   // double vol = 4.1;
   Serial.printf("ADC Val: %f\n", vol);
@@ -148,8 +148,9 @@ double Thermo()
 double GearPosition()
 {
   double g_adcVal = analogRead(Gear_PIn) * 3300 / 4096; // 3.3Vを4096段階で出力する.
-  double g_vol = (g_adcVal * 5000 / 3300 + 200) / 1000; // 12Vを3.5Vに降圧しているので、もとに戻す。
-                                                        // ギアの判定
+  double g_vol = (g_adcVal * 5000 / 3900) / 1000;       // 12Vを3.5Vに降圧しているので、もとに戻す。
+
+  // ギアの判定
   if (g_vol >= 1.6 && g_vol <= 2.0)
   {
     return 1;
