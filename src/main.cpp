@@ -109,14 +109,14 @@ public:
 LGFX lcd;
 
 #define Thermo_PIN 32
-#define Gear_PIn 33
+#define Gear_PIN 33
 
 void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(115200);
   pinMode(Thermo_PIN, ANALOG);
-  pinMode(Gear_PIn, ANALOG);
+  pinMode(Gear_PIN, ANALOG);
   lcd.init();
   lcd.setRotation(3);
   lcd.clear(TFT_WHITE);
@@ -126,13 +126,13 @@ void setup()
 
 double Thermo()
 {
-  // double vol = analogReadMilliVolts(AD_PIN) * 1000;
-  double adcVal = analogRead(Thermo_PIN) * 3300 / 4096; // 3.3Vを4096段階で出力する.
-  double vol = (adcVal * 5000 / 3900) / 1000;           // 12Vを3.5Vに降圧しているので、もとに戻す。
-  Serial.println(adcVal);
-  // double vol = 4.1;
-  Serial.printf("ADC Val: %f\n", vol);
-  // 水温の計算(温度センサーの水温と電圧の関係は比例関係ではないので、〇X^6+〇x^5+〇x^4++〇x^3+〇x^2+〇xになる)
+  // double adcVal = analogRead(Thermo_PIN) * 3300 / 4096; // 3.3Vを4096段階で出力する.
+  double adcVal = analogReadMilliVolts(Thermo_PIN);
+  double vol = (adcVal * 5000 / 3900) / 1000; // 12Vを3.5Vに降圧しているので、もとに戻す。
+  // Serial.printf("adcVal: %f\n", adcVal);
+  //  double vol = 4.1;
+  // Serial.printf("ADC Val: %f\n", vol);
+  //  水温の計算(温度センサーの水温と電圧の関係は比例関係ではないので、〇X^6+〇x^5+〇x^4++〇x^3+〇x^2+〇xになる)
   double volt_data[] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0}; // {6乗, 5乗, ４乗, 3乗, 2乗、1乗}
   for (int i = 0; i < 6; i++)
   {
@@ -147,10 +147,14 @@ double Thermo()
 
 double GearPosition()
 {
-  double g_adcVal = analogRead(Gear_PIn) * 3300 / 4096; // 3.3Vを4096段階で出力する.
-  double g_vol = (g_adcVal * 5000 / 3900) / 1000;       // 12Vを3.5Vに降圧しているので、もとに戻す。
+  // double g_adcVal = analogRead(Gear_PIN) * 3300 / 4096; // 3.3Vを4096段階で出力する.
+  //  double g_vol = (g_adcVal * 5000 / 3900) / 1000;       // 12Vを3.5Vに降圧しているので、もとに戻す。
+  double g_adcVal = analogReadMilliVolts(Gear_PIN);
+  double g_vol = (g_adcVal * 5000 / 3900) / 1000; // 5Vを3.5Vに降圧しているので、もとに戻す。
+  Serial.printf("Gear ADC Valmill: %f\n", g_vol);
 
-  // ギアの判定
+  // Serial.printf("Gear ADC Val: %f\n", g_vol);
+  //  ギアの判定
   if (g_vol >= 1.6 && g_vol <= 2.0)
   {
     return 1;
@@ -185,7 +189,7 @@ void loop()
 {
   double ThermoVal = Thermo();
   double GearPos = GearPosition();
-  Serial.print(ThermoVal);
+  Serial.printf("Gear Position: %f\n", GearPos);
   lcd.setTextColor(TFT_BLACK, TFT_WHITE);
   lcd.setTextSize(2);
   lcd.setCursor(10, 10);
